@@ -45,6 +45,33 @@ function showToast(msg) {
   showToast._t = setTimeout(() => el.classList.remove("show"), 2200);
 }
 
+/* ---------------- Exercise guide ---------------- */
+
+function getGuide(name) {
+  return (
+    EXERCISE_GUIDE[name] || {
+      icon: "💪",
+      muscle: "",
+      tip: "Garde le dos neutre, contrôle la descente et la remontée, respire à chaque répétition.",
+    }
+  );
+}
+
+function openExerciseGuideModal(name, target) {
+  const guide = getGuide(name);
+  openModal(`
+    <div class="guide-modal-icon">${guide.icon}</div>
+    <h3 class="guide-modal-title">${escapeHtml(name)}</h3>
+    ${guide.muscle ? `<p class="guide-modal-muscle">${escapeHtml(guide.muscle)}</p>` : ""}
+    ${target ? `<p class="guide-modal-target">${escapeHtml(target)}</p>` : ""}
+    <p class="guide-modal-tip">${escapeHtml(guide.tip)}</p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="cancel-modal">Compris !</button>
+    </div>
+  `);
+  document.getElementById("cancel-modal").addEventListener("click", closeModal);
+}
+
 /* ---------------- Tabs ---------------- */
 
 document.getElementById("tabs").addEventListener("click", (e) => {
@@ -108,9 +135,11 @@ function renderToday() {
   const rows = day.exercises
     .map((ex) => {
       const checked = doneIds.includes(ex.id);
+      const guide = getGuide(ex.name);
       return `
         <div class="exercise-row">
           <button class="exercise-check ${checked ? "checked" : ""}" data-ex="${ex.id}">${checked ? "✓" : ""}</button>
+          <button class="guide-btn" data-guide-name="${escapeHtml(ex.name)}" data-guide-target="${escapeHtml(ex.target || "")}" title="Comment faire ?">${guide.icon}</button>
           <div class="exercise-info">
             <div class="exercise-name ${checked ? "done" : ""}">${escapeHtml(ex.name)}</div>
             <div class="exercise-target">${escapeHtml(ex.target || "")}</div>
@@ -139,6 +168,12 @@ function renderToday() {
     pill.addEventListener("click", () => {
       selectedDayId = pill.dataset.day;
       renderToday();
+    });
+  });
+
+  card.querySelectorAll(".guide-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      openExerciseGuideModal(btn.dataset.guideName, btn.dataset.guideTarget);
     });
   });
 
@@ -221,7 +256,10 @@ function renderProgram() {
           .map(
             (ex) => `
           <li>
-            <span>${escapeHtml(ex.name)}</span>
+            <span class="ex-name-with-guide">
+              <button class="guide-btn guide-btn-sm" data-guide-name="${escapeHtml(ex.name)}" data-guide-target="${escapeHtml(ex.target || "")}" title="Comment faire ?">${getGuide(ex.name).icon}</button>
+              ${escapeHtml(ex.name)}
+            </span>
             <span class="ex-target">
               ${escapeHtml(ex.target || "")}
               <button class="icon-btn" data-action="delete-ex" data-ex-id="${ex.id}" title="Retirer">✕</button>
@@ -249,6 +287,9 @@ function renderProgram() {
       }
     });
     card.querySelector('[data-action="add-ex"]').addEventListener("click", () => openAddExerciseModal(day));
+    card.querySelectorAll(".guide-btn").forEach((btn) => {
+      btn.addEventListener("click", () => openExerciseGuideModal(btn.dataset.guideName, btn.dataset.guideTarget));
+    });
     card.querySelectorAll('[data-action="delete-ex"]').forEach((btn) => {
       btn.addEventListener("click", () => {
         day.exercises = day.exercises.filter((ex) => ex.id !== btn.dataset.exId);
@@ -419,12 +460,16 @@ function renderIdeas() {
     <div class="idea-group-card" data-group="${escapeHtml(g.group.toLowerCase())}">
       <h3>${g.icon} ${escapeHtml(g.group)}</h3>
       <div class="idea-chip-list">
-        ${g.items.map((item) => `<span class="idea-chip" data-text="${escapeHtml(item.toLowerCase())}">${escapeHtml(item)}</span>`).join("")}
+        ${g.items.map((item) => `<button class="idea-chip" data-text="${escapeHtml(item.toLowerCase())}" data-guide-name="${escapeHtml(item)}">${getGuide(item).icon} ${escapeHtml(item)}</button>`).join("")}
       </div>
     </div>`
   ).join("");
 
   container.innerHTML = sessionIdeasHtml + `<div class="ideas-groups" style="grid-column:1/-1; display:contents">${groupsHtml}</div>`;
+
+  container.querySelectorAll(".idea-chip").forEach((chip) => {
+    chip.addEventListener("click", () => openExerciseGuideModal(chip.dataset.guideName, ""));
+  });
 }
 
 document.getElementById("ideas-search").addEventListener("input", (e) => {

@@ -1,27 +1,29 @@
 :root {
-  --bg: #0f1115;
-  --bg-elev: #171a21;
-  --bg-elev-2: #1e222b;
-  --border: #2a2f3a;
-  --text: #eef1f6;
-  --text-dim: #98a0af;
-  --accent: #ff5f45;
-  --accent-2: #ffb648;
+  --bg: #0e0c10;
+  --bg-elev: #18151a;
+  --bg-elev-2: #211c24;
+  --border: #322b34;
+  --text: #f7eef2;
+  --text-dim: #b3a2ac;
+  --accent: #ff2d78;
+  --accent-2: #e8b4c8;
   --success: #35d08f;
-  --radius: 14px;
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --radius: 16px;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-accent: 0 6px 20px rgba(255, 45, 120, 0.25);
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f6f4f0;
+    --bg: #fff6f9;
     --bg-elev: #ffffff;
-    --bg-elev-2: #f0eee9;
-    --border: #e4e0d8;
-    --text: #201d1a;
-    --text-dim: #6b6459;
-    --shadow: 0 8px 24px rgba(30, 20, 10, 0.08);
+    --bg-elev-2: #fdeef4;
+    --border: #f5d9e5;
+    --text: #241820;
+    --text-dim: #8a7180;
+    --shadow: 0 8px 24px rgba(180, 30, 90, 0.08);
+    --shadow-accent: 0 6px 20px rgba(255, 45, 120, 0.18);
     color-scheme: light;
   }
 }
@@ -61,7 +63,12 @@ body {
 .brand h1 {
   margin: 0;
   font-size: 1.4rem;
-  letter-spacing: -0.02em;
+  font-family: Georgia, "Times New Roman", serif;
+  letter-spacing: 0.02em;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .tagline {
@@ -75,7 +82,8 @@ body {
   align-items: center;
   gap: 6px;
   background: var(--bg-elev);
-  border: 1px solid var(--border);
+  border: 1px solid var(--accent-2);
+  box-shadow: var(--shadow-accent);
   padding: 8px 14px;
   border-radius: 999px;
   font-weight: 600;
@@ -150,11 +158,19 @@ body {
 .btn:active { transform: scale(0.97); }
 
 .btn-primary {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), #c91f61);
   border-color: var(--accent);
   color: #fff;
+  box-shadow: var(--shadow-accent);
 }
-.btn-primary:hover { background: #e6543c; }
+.btn-primary:hover { background: linear-gradient(135deg, #ff4d8e, var(--accent)); }
+.btn-primary:disabled {
+  background: var(--bg-elev-2);
+  border-color: var(--border);
+  box-shadow: none;
+  color: var(--text-dim);
+  cursor: not-allowed;
+}
 
 .btn-ghost {
   background: transparent;
@@ -220,6 +236,68 @@ body {
   background: var(--success);
   border-color: var(--success);
   color: #fff;
+}
+
+.guide-btn {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-elev-2);
+  font-size: 1.05rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease, box-shadow 0.15s ease;
+}
+.guide-btn:hover {
+  border-color: var(--accent-2);
+  box-shadow: var(--shadow-accent);
+  transform: scale(1.05);
+}
+.guide-btn-sm {
+  width: 24px;
+  height: 24px;
+  font-size: 0.85rem;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.ex-name-with-guide {
+  display: inline-flex;
+  align-items: center;
+}
+
+.guide-modal-icon {
+  font-size: 2.6rem;
+  text-align: center;
+  margin-bottom: 4px;
+}
+.guide-modal-title { text-align: center; margin: 0 0 2px; }
+.guide-modal-muscle {
+  text-align: center;
+  color: var(--accent-2);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 8px;
+}
+.guide-modal-target {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  margin: 0 0 12px;
+}
+.guide-modal-tip {
+  background: var(--bg-elev-2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .exercise-info { flex: 1; min-width: 0; }
@@ -385,11 +463,20 @@ body {
 .idea-group-card h3 { margin: 0 0 10px; font-size: 1rem; }
 .idea-chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
 .idea-chip {
+  appearance: none;
+  font-family: inherit;
   background: var(--bg-elev-2);
   border: 1px solid var(--border);
+  color: var(--text);
   border-radius: 999px;
   padding: 5px 11px;
   font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.idea-chip:hover {
+  border-color: var(--accent-2);
+  box-shadow: var(--shadow-accent);
 }
 .idea-chip.hidden { display: none; }
 
