@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>💪 Renfo Tracker</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-icon">💪</span>
+        <div>
+          <h1>Renfo Tracker</h1>
+          <p class="tagline">Objectif summer body — 100% renfo, 0% cardio</p>
+        </div>
+      </div>
+      <div class="streak" id="streak-badge">
+        <span class="streak-flame">🔥</span>
+        <span id="streak-count">0</span>
+        <span class="streak-label">séances</span>
+      </div>
+    </header>
+
+    <nav class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="today">Aujourd'hui</button>
+      <button class="tab-btn" data-tab="program">Programme</button>
+      <button class="tab-btn" data-tab="history">Historique</button>
+      <button class="tab-btn" data-tab="ideas">Idées de séances</button>
+    </nav>
+
+    <main>
+      <!-- TODAY -->
+      <section class="tab-panel active" id="panel-today">
+        <div class="card session-card" id="today-session-card">
+          <!-- injected -->
+        </div>
+      </section>
+
+      <!-- PROGRAM -->
+      <section class="tab-panel" id="panel-program">
+        <div class="panel-header">
+          <h2>Mon programme de la semaine</h2>
+          <button class="btn btn-primary" id="add-day-btn">+ Ajouter un jour</button>
+        </div>
+        <div id="program-days" class="program-grid"></div>
+      </section>
+
+      <!-- HISTORY -->
+      <section class="tab-panel" id="panel-history">
+        <div class="panel-header">
+          <h2>Historique</h2>
+          <div class="stats-row" id="history-stats"></div>
+        </div>
+        <div id="history-list" class="history-list"></div>
+      </section>
+
+      <!-- IDEAS -->
+      <section class="tab-panel" id="panel-ideas">
+        <div class="panel-header">
+          <h2>Banque d'exercices &amp; idées de séances</h2>
+          <input type="text" id="ideas-search" placeholder="Rechercher un exercice ou un groupe musculaire..." />
+        </div>
+        <div id="ideas-groups" class="ideas-groups"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal for editing a day / exercise -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <div class="modal-content" id="modal-content"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
